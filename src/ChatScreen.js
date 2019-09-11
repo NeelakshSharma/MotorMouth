@@ -16,7 +16,7 @@ class ChatScreen extends React.Component {
       message: "",
       messageReceived: [],
       typing: "",
-      count: 0
+      count: 1
     };
     this.handleText = this.handleText.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
