@@ -1,0 +1,9 @@
+.MessageBox {
+  width: 50%;
+  margin: 30px;
+  border: 20px;
+}
+.ChatTextField {
+  position: absolute;
+  /* bottom: 20; */
+}
