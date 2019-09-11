@@ -12,9 +12,16 @@ http.listen(3001, function(){
   console.log('listening on *:3001');
 });
 
+var count = 0;
+
 io.on('connection', function(socket){
-    console.log('a user connected'+socket.id);
+    count++;
+    console.log(count)
+    io.emit('count',count)
     socket.on('message',function(messageObject){
     io.emit('messageReceive',messageObject)
+    })
+    socket.on('typing',function(name){
+        socket.broadcast.emit('typing',name)
     })
   });

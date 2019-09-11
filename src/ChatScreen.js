@@ -9,7 +9,9 @@ class ChatScreen extends React.Component {
     super(props);
     this.state = {
       message: "",
-      messageReceived: []
+      messageReceived: [],
+      typing: '',
+      count:0
     };
     this.handleText = this.handleText.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
@@ -17,9 +19,22 @@ class ChatScreen extends React.Component {
     this.socket.on("messageReceive", function(messageReceived) {
       addMessage(messageReceived);
     });
+    this.socket.on("typing",function(name){
+        setName(name)
+    })
+    this.socket.on("count",function(count){
+        setCount(count)
+    })
+    const setName = name => this.setState({
+        typing:name
+    })
+    const setCount = count => this.setState({
+        count: count
+    })
     const addMessage = messageReceived =>
       this.setState({
-        messageReceived: [...this.state.messageReceived, messageReceived]
+        messageReceived: [...this.state.messageReceived, messageReceived],
+        typing:'',
       });
   }
 
@@ -27,11 +42,12 @@ class ChatScreen extends React.Component {
     this.setState({
       message: e.target.value
     });
+    this.socket.emit("typing",this.props.name)
   }
 
   sendMessage() {
     this.setState({
-      message: ""
+      message: "",
     });
     this.socket.emit("message", {
       from: this.props.name,
@@ -43,9 +59,12 @@ class ChatScreen extends React.Component {
     return (
       <div>
         <div>
+          {<p>{this.state.count-1} sitting online</p>}  
+          <br/>  
           <ul>
               {this.state.messageReceived.map((e)=><li>{e.from}:{e.message}</li>)}
           </ul>
+          {this.state.typing?<p>{this.state.typing} is typing..</p>:<p></p>}
         </div>
         <TextField
           placeholder="Type here"
